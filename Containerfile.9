@@ -1,0 +1,23 @@
+FROM quay.io/rockylinux/rockylinux:9 as repos
+
+FROM quay.io/centos-bootc/centos-bootc:stream10 as builder
+
+RUN rm -rf /etc/yum.repos.d/*
+COPY rocky-9.repo /etc/yum.repos.d
+
+COPY rocky-9.yaml /usr/share/doc/bootc-base-imagectl/manifests
+
+RUN /usr/libexec/bootc-base-imagectl build-rootfs --manifest=rocky-9 /target-rootfs
+
+FROM scratch
+
+COPY --from=builder /target-rootfs/ /
+
+LABEL containers.bootc 1
+LABEL ostree.bootable 1
+
+ENV container=oci
+
+STOPSIGNAL SIGRTMIN+3
+
+CMD ["/sbin/init"]

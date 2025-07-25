@@ -1,0 +1,17 @@
+include:
+  - standard/manifest.yaml
+
+packages:
+  - authselect
+  - dnf-bootc
+  - dnf-yum
+
+postprocess:
+  - |
+    #!/usr/bin/env bash
+    mkdir -p /usr/lib/bootc/install/
+    cat > /usr/lib/bootc/install/20-rhel.toml << EOF
+    [install]
+    root-fs-type = "xfs"
+    EOF
+
