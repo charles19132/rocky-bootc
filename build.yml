@@ -1,0 +1,25 @@
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: "0 0 */2 * *"
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    permissions:
+      packages: write
+    strategy:
+      matrix:
+        version:
+          - 9
+          - 10
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "${{secrets.GITHUB_TOKEN}}" | sudo podman login -u "${{github.actor}}" --password-stdin ghcr.io
+      - run: sudo podman build --cap-add=all --security-opt=label=type:container_runtime_t --device /dev/fuse -t "ghcr.io/charles19132/rocky-bootc:${{matrix.version}}" -f "Containerfile.${{matrix.version}}" .
+      - run: sudo podman push "ghcr.io/charles19132/rocky-bootc:${{matrix.version}}"
