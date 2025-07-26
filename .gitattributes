@@ -1,2 +1,1 @@
-Containerfile.9 linguist-language=Dockerfile
-Containerfile.10 linguist-language=Dockerfile
+Containerfile.* linguist-language=Dockerfile
