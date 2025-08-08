@@ -23,4 +23,4 @@ jobs:
       - run: echo "${{secrets.GITHUB_TOKEN}}" | sudo podman login -u "${{github.actor}}" --password-stdin ghcr.io
       - run: sudo podman build --no-cache --cap-add=all --security-opt=label=type:container_runtime_t --device /dev/fuse -t "ghcr.io/charles19132/rocky-bootc:${{matrix.version}}" -f "Containerfile.${{matrix.version}}" .
       - run: sudo podman push "ghcr.io/charles19132/rocky-bootc:${{matrix.version}}"
-        if: github.event_name != "pull_request"
+        if: github.event_name != 'pull_request'
